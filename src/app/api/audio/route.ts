@@ -45,7 +45,10 @@ export async function GET(request: Request) {
       promptText: prompt.text,
     });
 
-    return new Response(result.audio, {
+    const body = new Uint8Array(result.audio.byteLength);
+    body.set(result.audio);
+
+    return new Response(body, {
       headers: {
         "Content-Type": resolveContentType(result.format),
         "Cache-Control": result.cached
