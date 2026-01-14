@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TTS Throwdown
 
-## Getting Started
+Day 14 build: a blind A/B benchmark for text-to-speech providers. Built with
+Next.js and Turso.
 
-First, run the development server:
+## Features
+
+- Blind A/B arena with locked voting until both clips are played
+- Live leaderboard with Turso-backed votes
+- On-demand TTS generation cached in Turso (local SQLite fallback)
+- Providers: OpenAI, ElevenLabs, Inworld (Gemini wiring commented out)
+
+## Quick start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env.local` and fill in your keys.
 
-## Learn More
+Required for live TTS:
 
-To learn more about Next.js, take a look at the following resources:
+```
+OPENAI_API_KEY=
+ELEVENLABS_API_KEY=
+INWORLD_BASIC_AUTH=
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Optional Turso config (falls back to `local.db` when unset):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+TURSO_DATABASE_URL=
+TURSO_AUTH_TOKEN=
+```
 
-## Deploy on Vercel
+Optional overrides (see `.env.example` for the full list):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+OPENAI_TTS_MODEL=gpt-4o-mini-tts
+OPENAI_TTS_VOICE=alloy
+ELEVENLABS_MODEL_ID=eleven_multilingual_v2
+ELEVENLABS_VOICE_ID=21m00Tcm4TlvDq8ikWAM
+INWORLD_TTS_MODEL=inworld-tts-1
+INWORLD_TTS_VOICE=Dennis
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`INWORLD_BASIC_AUTH` accepts either the raw base64 credential or a full
+`Basic ...` header value.
+
+## Customize
+
+- Providers and prompts: `src/lib/bench-data.ts`
+- TTS integrations: `src/lib/tts.ts`
+- UI: `src/app/page.tsx`, `src/components/`
+
+## License
+
+MIT
